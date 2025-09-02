@@ -210,8 +210,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun preprocess(expr: String): String {
+        // Replace 'x' or 'X' with '*'
+        var replaced = expr.replace("x", "*", ignoreCase = true)
+
+        // Handle numbers with % (e.g., 10% → 0.1)
         val regex = Regex("(\\d+(?:\\.\\d+)?)%")
-        var replaced = regex.replace(expr) { match ->
+        replaced = regex.replace(replaced) { match ->
             val number = match.groupValues[1].toDouble()
             (number / 100.0).toString()
         }
@@ -224,6 +228,7 @@ class MainActivity : AppCompatActivity() {
 
         return replaced
     }
+
 
     private fun infixToPostfix(expression: String): List<String> {
         val output = mutableListOf<String>()
