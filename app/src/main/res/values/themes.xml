@@ -6,4 +6,23 @@
     </style>
 
     <style name="Theme.SuperCalculator" parent="Base.Theme.SuperCalculator" />
+
+
+    <style name="CalcButton" parent="Widget.AppCompat.TextView" >
+        <item name="android:layout_width">76dp</item>
+        <item name="android:layout_height">76dp</item>
+        <item name="android:textSize">22dp</item>
+        <item name="android:fontFamily">@font/doppio_one</item>
+        <item name="android:layout_marginStart">16.dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">16.dp</item>
+    </style>
+    <style name="CalcButton.Normal" parent="CalcButton" >
+        <item name="android:textColor">@color/fourth_color</item>
+        <item name="android:background">@drawable/normal_circle_shape</item>
+    </style>
+    <style name="CalcButton.Color" parent="CalcButton" >
+        <item name="android:textColor">@color/secondary_color</item>
+        <item name="android:background">@drawable/color_circle_shape</item>
+    </style>
 </resources>

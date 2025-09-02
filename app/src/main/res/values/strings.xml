@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Super Calculator</string>
+    <string name="please_enter_number_first">"please enter number first "</string>
+    <string name="please_write_digit_or_delete_sign">"please write digit or delete sign - "</string>
 </resources>

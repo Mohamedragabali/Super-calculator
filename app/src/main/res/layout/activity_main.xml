@@ -1,19 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_color"
     tools:context=".MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/inner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingTop="32.dp"
+        android:background="@drawable/rectangle_with_left_and_right_bottom_corner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mid_guideline">
+
+        <ScrollView
+            android:id="@+id/scroll_result_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="28.dp"
+            android:paddingHorizontal="16.dp"
+            app:layout_constraintBottom_toBottomOf="@+id/inner">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/historyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/doppio_one"
+                    android:textSize="20.dp"
+                    android:textColor="@color/fourth_color_40"
+                    android:text=""/>
+                <TextView
+                    android:id="@+id/writeableText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/doppio_one"
+                    android:textColor="@color/fourth_color"
+                    android:gravity="end"
+                    android:layout_marginTop="8.dp"
+                    android:textSize="36.dp"
+                    android:text="0"/>
+            </LinearLayout>
+
+        </ScrollView>
+        <View
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/rectangle_with_corners"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mid_guideline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4"/>
+
+
+    <!-- Row 1 -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/btnAC"
+        style="@style/CalcButton.Normal"
+        android:text="AC"
+        app:layout_constraintTop_toBottomOf="@id/mid_guideline"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/btnBack"
+        style="@style/CalcButton.Normal"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/mid_guideline"
+        app:layout_constraintStart_toEndOf="@id/btnAC">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="27dp"
+            app:tint="@color/fourth_color"
+            android:src="@drawable/arrow_left"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnPercent"
+        style="@style/CalcButton.Color"
+        android:text="%"
+        app:layout_constraintTop_toBottomOf="@id/mid_guideline"
+        app:layout_constraintStart_toEndOf="@id/btnBack"/>
+
+    <TextView
+        android:id="@+id/btnDivide"
+        style="@style/CalcButton.Color"
+        android:text="/"
+        app:layout_constraintTop_toBottomOf="@id/mid_guideline"
+        app:layout_constraintStart_toEndOf="@id/btnPercent"/>
+
+    <!-- Row 2 -->
+    <TextView
+        android:id="@+id/btn7"
+        style="@style/CalcButton.Normal"
+        android:text="7"
+        app:layout_constraintTop_toBottomOf="@id/btnAC"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/btn8"
+        style="@style/CalcButton.Normal"
+        android:text="8"
+        app:layout_constraintTop_toBottomOf="@id/btnAC"
+        app:layout_constraintStart_toEndOf="@id/btn7"/>
+
+    <TextView
+        android:id="@+id/btn9"
+        style="@style/CalcButton.Normal"
+        android:text="9"
+        app:layout_constraintTop_toBottomOf="@id/btnAC"
+        app:layout_constraintStart_toEndOf="@id/btn8"/>
+
+    <TextView
+        android:id="@+id/btnMultiply"
+        style="@style/CalcButton.Color"
+        android:text="x"
+        app:layout_constraintTop_toBottomOf="@id/btnAC"
+        app:layout_constraintStart_toEndOf="@id/btn9"/>
+
+    <!-- Row 3 -->
+    <TextView
+        android:id="@+id/btn4"
+        style="@style/CalcButton.Normal"
+        android:text="4"
+        app:layout_constraintTop_toBottomOf="@id/btn7"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/btn5"
+        style="@style/CalcButton.Normal"
+        android:text="5"
+        app:layout_constraintTop_toBottomOf="@id/btn7"
+        app:layout_constraintStart_toEndOf="@id/btn4"/>
+
+    <TextView
+        android:id="@+id/btn6"
+        style="@style/CalcButton.Normal"
+        android:text="6"
+        app:layout_constraintTop_toBottomOf="@id/btn7"
+        app:layout_constraintStart_toEndOf="@id/btn5"/>
+
+    <TextView
+        android:id="@+id/btnPlus"
+        style="@style/CalcButton.Color"
+        android:text="+"
+        app:layout_constraintTop_toBottomOf="@id/btn7"
+        app:layout_constraintStart_toEndOf="@id/btn6"/>
+
+    <!-- Row 4 -->
+    <TextView
+        android:id="@+id/btn1"
+        style="@style/CalcButton.Normal"
+        android:text="1"
+        app:layout_constraintTop_toBottomOf="@id/btn4"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/btn2"
+        style="@style/CalcButton.Normal"
+        android:text="2"
+        app:layout_constraintTop_toBottomOf="@id/btn4"
+        app:layout_constraintStart_toEndOf="@id/btn1"/>
+
+    <TextView
+        android:id="@+id/btn3"
+        style="@style/CalcButton.Normal"
+        android:text="3"
+        app:layout_constraintTop_toBottomOf="@id/btn4"
+        app:layout_constraintStart_toEndOf="@id/btn2"/>
+
+    <TextView
+        android:id="@+id/btnMinus"
+        style="@style/CalcButton.Color"
+        android:text="-"
+        app:layout_constraintTop_toBottomOf="@id/btn4"
+        app:layout_constraintStart_toEndOf="@id/btn3"/>
+
+    <!-- Row 5 -->
+    <TextView
+        android:id="@+id/btnPlusMinus"
+        style="@style/CalcButton.Normal"
+        android:text="±"
+        app:layout_constraintTop_toBottomOf="@id/btn1"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/btn0"
+        style="@style/CalcButton.Normal"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@id/btn1"
+        app:layout_constraintStart_toEndOf="@id/btnPlusMinus"/>
+
+    <TextView
+        android:id="@+id/btnDot"
+        style="@style/CalcButton.Normal"
+        android:text="."
+        app:layout_constraintTop_toBottomOf="@id/btn1"
+        app:layout_constraintStart_toEndOf="@id/btn0"/>
+
+    <TextView
+        android:id="@+id/btnEqual"
+        style="@style/CalcButton.Color"
+        android:text="="
+        app:layout_constraintTop_toBottomOf="@id/btn1"
+        app:layout_constraintStart_toEndOf="@id/btnDot"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
