@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             numberHasDot = true
             changeWriteableTextHandelFirstWrite(writableText , "0.")
         }
-        else if (lastChar.isDigit() && text == "." && numberHasDot){
+        else if ( (lastChar.isDigit() && text == "." && numberHasDot ) || (writableText.length > 2 && writableText[writableText.length-2] == '%' && text == "% ") ){
 
         }
         else if ( writableText == "-" && text =="-") {
