@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             deleteLastItem()
         }
         binding.btnPercent.setOnClickListener {
-            changeWritableText(" % ")
+            changeWritableText("% ")
         }
         binding.btnDivide.setOnClickListener {
             changeWritableText(" / ")
@@ -84,23 +84,27 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btnEqual.setOnClickListener {
             val writableText = binding.writeableText.text
-            if( writableText == "0" || writableText== "0." ){
-                numberHasDot = false
-                binding.historyText.text = "0"
-                binding.writeableText.text = "0"
-            }else if (writableText == "-"){
+        if (writableText == "-"){
                 Toast.makeText(this, "please write correct equation" , Toast.LENGTH_SHORT).show()
             }else{
                 try {
-                    val result = evaluate(binding.writeableText.text.toString())
+                    val result  = evaluate(binding.writeableText.text.toString())
                     if(result.toString() == "Infinity"){
                         Toast.makeText(this, "number divide by 0 it is wrong " , Toast.LENGTH_SHORT).show()
                     }else if (result.toString() == "NaN"){
                         Toast.makeText(this, "0 divide by 0 it is wrong " , Toast.LENGTH_SHORT).show()
                     }else{
-                        numberHasDot = true
-                        binding.historyText.text = binding.writeableText.text
-                        binding.writeableText.text = result.toString()
+                        val stringResult = result.toString()
+                        if(stringResult[stringResult.length-2] == '.' && stringResult[stringResult.length-1] == '0'){
+                            numberHasDot = false
+                            binding.historyText.text = binding.writeableText.text
+                            binding.writeableText.text = result.toString().dropLast(2)
+                        }else{
+                            numberHasDot = true
+                            binding.historyText.text = binding.writeableText.text
+                            binding.writeableText.text = result.toString()
+                        }
+
                     }
 
                 }catch (e : Exception){
@@ -123,7 +127,11 @@ class MainActivity : AppCompatActivity() {
         if(writableText == "0"){
 
         }else if(lastChar == ' '){
-            writableText = writableText.dropLast(3)
+            if(writableText[writableText.length-2] == '%'){
+                writableText = writableText.dropLast(2)
+            }else{
+                writableText = writableText.dropLast(3)
+            }
             binding.writeableText.text = writableText
         }else{
             if(lastChar == '.'){numberHasDot = false }
@@ -139,7 +147,7 @@ class MainActivity : AppCompatActivity() {
     private fun changeWritableText(text: String, isNegativeNumber: Boolean = false) {
         var writableText = binding.writeableText.text.toString()
         val lastChar = writableText.last()
-        if (text == " % " || text == " / " || text == " x " || text == " + " || text == " - "){
+        if (text == "% " || text == " / " || text == " x " || text == " + " || text == " - "){
             numberHasDot = false
         }
 
@@ -160,24 +168,33 @@ class MainActivity : AppCompatActivity() {
             if(!isNegativeNumber){
              writableText = writableText.dropLast(countOfDigit)
                 binding.writeableText.text = writableText + "-" + number
+            }else{
+                writableText = writableText.dropLast(countOfDigit+1)
+                binding.writeableText.text = writableText  + number
             }
         }
-        else if((writableText == "0" || writableText == "-")&& (text == " % " || text == " / " || text == " x " || text == " + " || text == " - ") ){
+        else if((writableText == "0" || writableText == "-")&& (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ") ){
             Toast.makeText(this, this.getString(R.string.please_enter_number_first) , Toast.LENGTH_SHORT).show()
         }
-        else if (lastChar == '-' && (text == " % " || text == " / " || text == " x " || text == " + " || text == " - ") ){
+        else if (lastChar == '-' && (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ") ){
             Toast.makeText(this,
                 getString(R.string.please_write_digit_or_delete_sign) , Toast.LENGTH_SHORT).show()
         }
-        else if (lastChar == ' ' && !isNegativeNumber && (text == " % " || text == " / " || text == " x " || text == " + " || text == " - ")) {
+        else if (lastChar == ' ' && writableText[writableText.length-2] != '%' && !isNegativeNumber && (text == " / " || text == " x " || text == " + " || text == " - ")) {
             writableText =  writableText.dropLast(3)
             changeWriteableTextHandelFirstWrite(writableText , text)
-        }else if ( (lastChar == ' ' || writableText == "0") && text == "."){
+        }
+        else if ( (lastChar == ' ' || writableText == "0") && text == "."){
             numberHasDot = true
             changeWriteableTextHandelFirstWrite(writableText , "0.")
-        }else if (lastChar.isDigit() && text == "." && numberHasDot){
+        }
+        else if (lastChar.isDigit() && text == "." && numberHasDot){
 
-        } else {
+        }
+        else if ( writableText == "-" && text =="-") {
+            changeWriteableTextHandelFirstWrite("" , "0")
+        }
+        else {
             if (text == "."){ numberHasDot = true }
             changeWriteableTextHandelFirstWrite(writableText , text)
         }
