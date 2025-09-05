@@ -242,13 +242,10 @@ class MainActivity : AppCompatActivity() {
 
 
     fun evaluate(expression: String): Double {
-        // 1) Preprocess the expression (handle percentages)
         val processed = preprocess(expression)
 
-        // 2) Convert to postfix (Reverse Polish Notation)
         val postfix = infixToPostfix(processed)
 
-        // 3) Evaluate postfix
         return evalPostfix(postfix)
     }
 
@@ -322,10 +319,6 @@ class MainActivity : AppCompatActivity() {
 
             listOFNumber.add(resultNumber)
         }
-        Log.e(
-            "MY_TAG", "here " +
-                    "$listOFNumber   $expression"
-        )
 
 
         var finalExpression = ""
@@ -363,7 +356,18 @@ class MainActivity : AppCompatActivity() {
                     }else { "" }
                     if (expression[indexOfExprssion - 1] == '+' || expression[indexOfExprssion - 1] == '-') {
                         indexOfExprssion++
-                        finalExpression = finalExpression + " ${it*beforeNumber/100} " +lastSign
+
+                        val x = finalExpression.dropLast(1)
+                        val postfix = infixToPostfix(x)
+
+                        val result =  evalPostfix(postfix)
+                        if(finalExpression.last() =='+'){
+                            finalExpression = "${ result + it*result/100} " +lastSign
+                        }else{
+                            finalExpression = "${ result - it*result/100} " +lastSign
+
+                        }
+
                     } else {
                         indexOfExprssion++
                         finalExpression = finalExpression + " ${it/100} " +lastSign
@@ -375,15 +379,6 @@ class MainActivity : AppCompatActivity() {
             }
             beforeNumber = it
             indexOfExprssion++
-        }
-
-        if (expression.size > indexOfExprssion) {
-            var exprss =
-                if (expression.size > indexOfExprssion) expression[indexOfExprssion] else ""
-            if (exprss == 'x') {
-                exprss = "*"
-            }
-            finalExpression = finalExpression +exprss
         }
 
         return finalExpression
