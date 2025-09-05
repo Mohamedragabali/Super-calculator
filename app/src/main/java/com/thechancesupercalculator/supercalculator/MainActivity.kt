@@ -1,9 +1,11 @@
 package com.thechancesupercalculator.supercalculator
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.thechancesupercalculator.supercalculator.databinding.ActivityMainBinding
@@ -12,7 +14,7 @@ import kotlin.math.sign
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private var numberHasDot  = false
+    private var numberHasDot = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnAC.setOnClickListener {
             numberHasDot = false
             binding.writeableText.text = "0"
-            binding.historyText.text =""
+            binding.historyText.text = ""
         }
         binding.btnBack.setOnClickListener {
             deleteLastItem()
@@ -84,22 +86,24 @@ class MainActivity : AppCompatActivity() {
         }
         binding.btnEqual.setOnClickListener {
             val writableText = binding.writeableText.text
-        if (writableText == "-"){
-                Toast.makeText(this, "please write correct equation" , Toast.LENGTH_SHORT).show()
-            }else{
+            if (writableText == "-") {
+                Toast.makeText(this, "please write correct equation", Toast.LENGTH_SHORT).show()
+            } else {
                 try {
-                    val result  = evaluate(binding.writeableText.text.toString())
-                    if(result.toString() == "Infinity"){
-                        Toast.makeText(this, "number divide by 0 it is wrong " , Toast.LENGTH_SHORT).show()
-                    }else if (result.toString() == "NaN"){
-                        Toast.makeText(this, "0 divide by 0 it is wrong " , Toast.LENGTH_SHORT).show()
-                    }else{
+                    val result = evaluate(binding.writeableText.text.toString())
+                    if (result.toString() == "Infinity") {
+                        Toast.makeText(this, "number divide by 0 it is wrong ", Toast.LENGTH_SHORT)
+                            .show()
+                    } else if (result.toString() == "NaN") {
+                        Toast.makeText(this, "0 divide by 0 it is wrong ", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
                         val stringResult = result.toString()
-                        if(stringResult[stringResult.length-2] == '.' && stringResult[stringResult.length-1] == '0'){
+                        if (stringResult[stringResult.length - 2] == '.' && stringResult[stringResult.length - 1] == '0') {
                             numberHasDot = false
                             binding.historyText.text = binding.writeableText.text
                             binding.writeableText.text = result.toString().dropLast(2)
-                        }else{
+                        } else {
                             numberHasDot = true
                             binding.historyText.text = binding.writeableText.text
                             binding.writeableText.text = result.toString()
@@ -107,8 +111,8 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-                }catch (e : Exception){
-                    Toast.makeText(this, "some thing wrong" , Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this, "some thing wrong", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -121,82 +125,104 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteLastItem(){
+    private fun deleteLastItem() {
         var writableText = binding.writeableText.text.toString()
         val lastChar = writableText.last()
-        if(writableText == "0"){
+        if (writableText == "0") {
 
-        }else if(lastChar == ' '){
-            if(writableText[writableText.length-2] == '%'){
+        } else if (lastChar == ' ') {
+            if (writableText[writableText.length - 2] == '%') {
                 writableText = writableText.dropLast(2)
-            }else{
+            } else {
                 writableText = writableText.dropLast(3)
             }
             binding.writeableText.text = writableText
-        }else{
-            if(lastChar == '.'){numberHasDot = false }
+        } else {
+            if (lastChar == '.') {
+                numberHasDot = false
+            }
             writableText = writableText.dropLast(1)
             binding.writeableText.text = writableText
         }
 
-        if(writableText == ""){
-            binding.writeableText.text ="0"
+        if (writableText == "") {
+            binding.writeableText.text = "0"
         }
 
     }
+
     private fun changeWritableText(text: String, isNegativeNumber: Boolean = false) {
         var writableText = binding.writeableText.text.toString()
         val lastChar = writableText.last()
-        if (text == "% " || text == " / " || text == " x " || text == " + " || text == " - "){
+        if (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ") {
             numberHasDot = false
         }
-
-
-        if( writableText != "0" && lastChar.isDigit() && text == "-"  ){
+        if (writableText != "0" && lastChar.isDigit() && text == "-") {
             var number = ""
             var countOfDigit = 0
             var isNegativeNumber = false
-            for ( i in writableText.length -1 downTo 0 ){
-                if(writableText[i] == ' '){break }
-                else if( writableText[i] == '-'){
+            for (i in writableText.length - 1 downTo 0) {
+                if (writableText[i] == ' ') {
+                    break
+                } else if (writableText[i] == '-') {
                     isNegativeNumber = true
                     break
                 }
                 number = writableText[i] + number
                 countOfDigit++
             }
-            if(!isNegativeNumber){
-             writableText = writableText.dropLast(countOfDigit)
+            if (!isNegativeNumber) {
+                writableText = writableText.dropLast(countOfDigit)
                 binding.writeableText.text = writableText + "-" + number
-            }else{
-                writableText = writableText.dropLast(countOfDigit+1)
-                binding.writeableText.text = writableText  + number
+            } else {
+                writableText = writableText.dropLast(countOfDigit + 1)
+                binding.writeableText.text = writableText + number
             }
         }
-        else if((writableText == "0" || writableText == "-")&& (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ") ){
-            Toast.makeText(this, this.getString(R.string.please_enter_number_first) , Toast.LENGTH_SHORT).show()
+        else if ((writableText == "0" || writableText == "-") && (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ")) {
+            Toast.makeText(
+                this,
+                this.getString(R.string.please_enter_number_first),
+                Toast.LENGTH_SHORT
+            ).show()
         }
-        else if (lastChar == '-' && (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ") ){
-            Toast.makeText(this,
-                getString(R.string.please_write_digit_or_delete_sign) , Toast.LENGTH_SHORT).show()
+        else if (lastChar == '-' && (text == "% " || text == " / " || text == " x " || text == " + " || text == " - ")) {
+            Toast.makeText(
+                this,
+                getString(R.string.please_write_digit_or_delete_sign), Toast.LENGTH_SHORT
+            ).show()
         }
-        else if (lastChar == ' ' && writableText[writableText.length-2] != '%' && !isNegativeNumber && (text == " / " || text == " x " || text == " + " || text == " - ")) {
-            writableText =  writableText.dropLast(3)
-            changeWriteableTextHandelFirstWrite(writableText , text)
+        else if (lastChar == ' ' && writableText[writableText.length - 2] != '%' && !isNegativeNumber && (text == " / " || text == " x " || text == " + " || text == " - ")) {
+            writableText = writableText.dropLast(3)
+            changeWriteableTextHandelFirstWrite(writableText, text)
         }
-        else if ( (lastChar == ' ' || writableText == "0") && text == "."){
+        else if ((lastChar == ' ' || writableText == "0") && text == ".") {
             numberHasDot = true
-            changeWriteableTextHandelFirstWrite(writableText , "0.")
+            changeWriteableTextHandelFirstWrite(writableText, "0.")
         }
-        else if ( (lastChar.isDigit() && text == "." && numberHasDot ) || (writableText.length > 2 && writableText[writableText.length-2] == '%' && text == "% ") ){
+        else if ((lastChar.isDigit() && text == "." && numberHasDot) || (writableText.length > 2 && writableText[writableText.length - 2] == '%' && text == "% ")) {
 
         }
-        else if ( writableText == "-" && text =="-") {
-            changeWriteableTextHandelFirstWrite("" , "0")
+        else if (text == "% " && !writableText[writableText.length - 1].isDigit()) {
+            Toast.makeText(
+                this,
+                "please enter numbers first to use %",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        else if (writableText == "-" && text == "-") {
+            changeWriteableTextHandelFirstWrite("", "0")
         }
         else {
-            if (text == "."){ numberHasDot = true }
-            changeWriteableTextHandelFirstWrite(writableText , text)
+            if (text == ".") {
+                numberHasDot = true
+            }
+            if (text.isDigitsOnly() && writableText.length > 1 && writableText[writableText.length - 2] == '%') {
+                changeWriteableTextHandelFirstWrite(writableText, "x $text")
+            } else {
+                changeWriteableTextHandelFirstWrite(writableText, text)
+            }
+
         }
 
 
@@ -206,7 +232,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeWriteableTextHandelFirstWrite(writableText : String , text  : String ){
+    private fun changeWriteableTextHandelFirstWrite(writableText: String, text: String) {
         if (writableText == "0") {
             binding.writeableText.text = "$text"
         } else {
@@ -227,25 +253,141 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun preprocess(expr: String): String {
-        // Replace 'x' or 'X' with '*'
-        var replaced = expr.replace("x", "*", ignoreCase = true)
+        var expressAfterEdit = expr.replace("% ", " %", ignoreCase = true)
 
-        // Handle numbers with % (e.g., 10% → 0.1)
-        val regex = Regex("(\\d+(?:\\.\\d+)?)%")
-        replaced = regex.replace(replaced) { match ->
-            val number = match.groupValues[1].toDouble()
-            (number / 100.0).toString()
+        val listOFNumber = mutableListOf<Double>()
+        val expression = mutableListOf<Char>()
+        var isNegative = false
+        var isDouble = false
+        var number = ""
+        var numberAfterDot = "0."
+        var charBeforeSign = ' '
+        var isItChar = false
+        var isLastAddedNumber = false
+        expressAfterEdit.forEach {
+            if (charBeforeSign == ' ' && it == '-' && isLastAddedNumber == false) {
+                isNegative = true
+            }
+            else if (it.isDigit()) {
+                if (isDouble) {
+                    numberAfterDot = numberAfterDot + it
+                } else {
+                    number = number + it
+                }
+            }
+            else if (it == '.') {
+                isDouble = true
+            }
+            else {
+                if (it != ' ') {
+                    expression.add(it)
+                    isItChar = true
+                    if(it != '%'){
+                        isLastAddedNumber = false
+                    }
+                }
+                else {
+                    if (isItChar) {
+                        isItChar = false
+                    }
+                    else {
+                        isLastAddedNumber = true
+                        val resultNumber = (number.toDouble() +
+                                numberAfterDot.toDouble()) *
+                                if (isNegative) {
+                                    -1
+                                } else {
+                                    1
+                                }
+
+                        listOFNumber.add(resultNumber)
+                        isNegative = false
+                        isDouble = false
+                        number = ""
+                        numberAfterDot = "0."
+                    }
+                }
+            }
+
+            charBeforeSign = it
         }
 
-        // Handle "10 % 20" → "0.1 * 20"
-        replaced = replaced.replace(Regex("(\\d+(?:\\.\\d+)?)\\s*%\\s*(\\d+(?:\\.\\d+)?)")) {
-            val num = it.groupValues[1].toDouble() / 100.0
-            "$num * ${it.groupValues[2]}"
+        if (charBeforeSign.isDigit() || (charBeforeSign == '%' && number.isNotEmpty()) || charBeforeSign == '.') {
+            val resultNumber = (number.toDouble() +
+                    numberAfterDot.toDouble()) * if (isNegative) {
+                -1
+            } else {
+                1
+            }
+
+            listOFNumber.add(resultNumber)
+        }
+        Log.e(
+            "MY_TAG", "here " +
+                    "$listOFNumber   $expression"
+        )
+
+
+        var finalExpression = ""
+        var indexOfExprssion = 0;
+        var beforeNumber = 0.0
+        listOFNumber.forEach {
+
+            var exprss =
+                if (expression.size > indexOfExprssion) expression[indexOfExprssion] else ""
+            if (exprss == 'x') {
+                exprss = "*"
+            }
+
+            if (exprss == '%') {
+                if(expression.size == 1 ){
+                    finalExpression = finalExpression + " ${it / 100} "
+                }
+                 else if (indexOfExprssion == 0) {
+                    indexOfExprssion++
+
+
+                    finalExpression = finalExpression + " ${it / 100} " + if (expression[indexOfExprssion]== 'x') {
+                        '*'
+                    }else{
+                        expression[indexOfExprssion]
+                    }
+                } else {
+                    val lastSign = if(expression.size > indexOfExprssion+ 1 ){
+                       if (expression[indexOfExprssion+1] == 'x') {
+                            '*'
+                        }else{
+                            expression[indexOfExprssion+1]
+                        }
+
+                    }else { "" }
+                    if (expression[indexOfExprssion - 1] == '+' || expression[indexOfExprssion - 1] == '-') {
+                        indexOfExprssion++
+                        finalExpression = finalExpression + " ${it*beforeNumber/100} " +lastSign
+                    } else {
+                        indexOfExprssion++
+                        finalExpression = finalExpression + " ${it/100} " +lastSign
+                    }
+                }
+
+            } else {
+                finalExpression = finalExpression + " $it " + exprss
+            }
+            beforeNumber = it
+            indexOfExprssion++
         }
 
-        return replaced
+        if (expression.size > indexOfExprssion) {
+            var exprss =
+                if (expression.size > indexOfExprssion) expression[indexOfExprssion] else ""
+            if (exprss == 'x') {
+                exprss = "*"
+            }
+            finalExpression = finalExpression +exprss
+        }
+
+        return finalExpression
     }
-
 
     private fun infixToPostfix(expression: String): List<String> {
         val output = mutableListOf<String>()
@@ -298,7 +440,6 @@ class MainActivity : AppCompatActivity() {
 
         return stack.pop()
     }
-
 
 
 }
