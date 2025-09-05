@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/doppio_one"
                     android:text=""
+                    android:gravity="end"
                     android:textColor="@color/fourth_color_40"
                     android:textSize="20.dp" />
 
